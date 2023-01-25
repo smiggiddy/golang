@@ -31,3 +31,8 @@ func (num *bigNumber) huge() {
 	fmt.Println(*num)
 	*num = bigNumber(*num) * bigNumber(*num)
 }
+
+// num *bigNumber is the receiver variable
+// receiver can be value or pointer
+// value gets the copy of type
+// pointer reveiver gets pointer to type

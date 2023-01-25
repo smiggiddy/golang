@@ -33,15 +33,19 @@ func main() {
 	ms = &myStruct{foo: 42}
 	fmt.Println(ms)
 
-	// every variablehas an initializing value usually 0
+	// every variable has an initializing value usually 0
 	// pointers not intilized are nil
 	var test *myStruct
-	fmt.Println(test)
+	fmt.Println(test) //nil pointer
 	test = new(myStruct)
 	//if pointers are nil you'll get a runtime error
-	(*test).foo = 42
+	(*test).foo = 33
 	fmt.Println((*test).foo)
 
+	test.foo = 22
+	fmt.Println(test.foo)
+	test = nil
+	fmt.Println(test)
 	// ^ go can handle this without needing to use the parents
 	// interpreter can derefernece the pointer for us in Go
 }
