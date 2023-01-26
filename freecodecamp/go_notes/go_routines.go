@@ -29,4 +29,5 @@ func sayHello() {
 	wg.Done()
 }
 
+// how to check for race conditions?
 // go run -race <program name>
