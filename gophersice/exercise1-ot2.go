@@ -6,13 +6,16 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
 	// load cli flags
 
 	wordPtr := flag.String("file", "./exercises.csv", "file path")
+	timePtr := flag.String("timer", "30", "Used to set the default timer for the program")
 	flag.Parse()
 	reader := bufio.NewReader(os.Stdin)
 
@@ -26,24 +29,47 @@ func main() {
 
 	var right, wrong int
 
-	for i := 0; i < totalQuestions; i++ {
+	timer_secs, err := strconv.Atoi(*timePtr)
 
-		fmt.Println("What is the answer:", records[i][0])
-		fmt.Print("-> ")
+	if err != nil {
+		fmt.Println("Invalid value for the timer")
+	}
 
-		text, _ := reader.ReadString('\n')
-		// convert CRLF to LF
-		text = strings.Replace(text, "\n", "", -1)
+	timer := time.NewTimer(time.Duration(timer_secs) * time.Second)
+	i := 0
 
-		if records[i][1] == text {
-			fmt.Println("Correct")
-			right += 1
-		} else {
-			fmt.Println("Wrong")
-			wrong += 1
+	// timer_done := timer.Stop()
+	func() {
+		for {
+			select {
+			case <-timer.C:
+				fmt.Println("Game over")
+				return
+
+			default:
+			}
+			if i < totalQuestions {
+				fmt.Println("What is the answer:", records[i][0])
+				fmt.Print("-> ")
+
+				text, _ := reader.ReadString('\n')
+				// convert CRLF to LF
+				text = strings.Replace(text, "\n", "", -1)
+
+				if records[i][1] == text {
+					fmt.Println("Correct")
+					right += 1
+				} else {
+					fmt.Println("Wrong")
+					wrong += 1
+				}
+				i++
+				continue
+			}
+
 		}
 
-	}
+	}()
 
 	fmt.Println("Thanks for playing")
 	fmt.Println("Totals:", right, "Right", wrong, "Wrong")
