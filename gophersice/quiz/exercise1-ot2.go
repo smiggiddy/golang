@@ -23,17 +23,16 @@ var (
 )
 
 func main() {
+
+	ch := make(chan string)
+
 	fmt.Println("Welcome to Go Quiz")
 	flag.Parse()
 	reader := bufio.NewReader(os.Stdin)
 	records := csvReader(*wordPtr)
 	theProblems := parseProblems(records)
 
-	fmt.Println(theProblems)
-
-	totalQuestions := len(records)
-
-	var right, wrong int
+	var right int
 
 	timer_secs, err := strconv.Atoi(*timePtr)
 
@@ -42,8 +41,8 @@ func main() {
 	}
 
 	timer := time.NewTimer(time.Duration(timer_secs) * time.Second)
-	i := 0
 
+	i := 0
 	// timer_done := timer.Stop()
 	func() {
 		for {
@@ -53,32 +52,26 @@ func main() {
 				return
 
 			default:
+				ch <- "test"
 			}
-			if i < totalQuestions {
-				fmt.Println("What is the answer:", records[i][0])
-				fmt.Print("-> ")
+			fmt.Println(theProblems[i].question)
+			fmt.Print("-> ")
 
-				text, _ := reader.ReadString('\n')
-				// convert CRLF to LF
-				text = strings.Replace(text, "\n", "", -1)
+			text, _ := reader.ReadString('\n')
+			// convert CRLF to LF
+			text = strings.Replace(text, "\n", "", -1)
 
-				if records[i][1] == text {
-					fmt.Println("Correct")
-					right += 1
-				} else {
-					fmt.Println("Wrong")
-					wrong += 1
-				}
-				i++
-				continue
+			if theProblems[i].answer == text {
+				right += 1
 			}
+			i++
 
 		}
 
 	}()
-
-	fmt.Println("Thanks for playing")
-	fmt.Println("Totals:", right, "Right", wrong, "Wrong")
+	hello := <-ch
+	fmt.Println("Thanks for playing", hello)
+	fmt.Println("Total correct", right, "Out of", i)
 
 }
 
