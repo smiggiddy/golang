@@ -1,13 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"encoding/csv"
 	"flag"
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -24,15 +22,14 @@ var (
 
 func main() {
 
-	ch := make(chan string)
-
 	fmt.Println("Welcome to Go Quiz")
 	flag.Parse()
-	reader := bufio.NewReader(os.Stdin)
+	// reader := bufio.NewReader(os.Stdin)s
 	records := csvReader(*wordPtr)
 	theProblems := parseProblems(records)
 
 	var right int
+	var answer string
 
 	timer_secs, err := strconv.Atoi(*timePtr)
 
@@ -41,9 +38,13 @@ func main() {
 	}
 
 	timer := time.NewTimer(time.Duration(timer_secs) * time.Second)
+	questions := make(chan string, len(theProblems))
+
+	// for i := range theProblems {
+
+	// }
 
 	i := 0
-	// timer_done := timer.Stop()
 	func() {
 		for {
 			select {
@@ -51,26 +52,24 @@ func main() {
 				fmt.Println("Game over")
 				return
 
+			case <-questions:
+
+				fmt.Println(questions)
+				fmt.Print("-> ")
+				fmt.Scanln(&answer)
+
+				if theProblems[i].answer == answer {
+					right += 1
+				}
+				i++
 			default:
-				ch <- "test"
+				questions <- theProblems[i].question
 			}
-			fmt.Println(theProblems[i].question)
-			fmt.Print("-> ")
-
-			text, _ := reader.ReadString('\n')
-			// convert CRLF to LF
-			text = strings.Replace(text, "\n", "", -1)
-
-			if theProblems[i].answer == text {
-				right += 1
-			}
-			i++
 
 		}
 
 	}()
-	hello := <-ch
-	fmt.Println("Thanks for playing", hello)
+
 	fmt.Println("Total correct", right, "Out of", i)
 
 }
