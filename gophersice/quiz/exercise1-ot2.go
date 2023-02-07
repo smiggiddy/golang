@@ -38,11 +38,7 @@ func main() {
 	}
 
 	timer := time.NewTimer(time.Duration(timer_secs) * time.Second)
-	questions := make(chan string, len(theProblems))
-
-	// for i := range theProblems {
-
-	// }
+	chQuestions := make(chan string, len(theProblems))
 
 	i := 0
 	func() {
@@ -50,11 +46,13 @@ func main() {
 			select {
 			case <-timer.C:
 				fmt.Println("Game over")
+				close(chQuestions)
+				fmt.Println("Total correct", right, "Out of", i)
 				return
 
-			case <-questions:
+			case quest := <-chQuestions:
 
-				fmt.Println(questions)
+				fmt.Println(quest)
 				fmt.Print("-> ")
 				fmt.Scanln(&answer)
 
@@ -62,15 +60,30 @@ func main() {
 					right += 1
 				}
 				i++
+
+				if i >= len(theProblems) {
+					close(chQuestions)
+					return
+				}
+
 			default:
-				questions <- theProblems[i].question
+				chQuestions <- theProblems[i].question
+
 			}
 
 		}
 
 	}()
-
-	fmt.Println("Total correct", right, "Out of", i)
+	ch := make(chan string)
+	go func(ch <-chan string) {
+		for {
+			select {
+			case <-ch:
+				fmt.Println("ended")
+			default:
+			}
+		}
+	}(ch)
 
 }
 
