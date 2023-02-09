@@ -6,16 +6,19 @@ import (
 	"sync"
 )
 
+var wg = sync.WaitGroup{}
+
 func main() {
-	ch := make(chan string, 20)
+	ch := make(chan string, 5)
 
 	for i := 0; i < 5; i++ {
 		ch <- strconv.Itoa(i)
 	}
-	var wg = sync.WaitGroup{}
 	wg.Add(1)
 
-	go func(ch <-chan string) {
+	// close(ch)
+
+	go func() {
 		for {
 			select {
 			case msg := <-ch:
@@ -23,9 +26,9 @@ func main() {
 			default:
 			}
 		}
-	}(ch)
-
+	}()
 	wg.Wait()
-	wg.Done()
+
+	fmt.Println("Program is done")
 
 }

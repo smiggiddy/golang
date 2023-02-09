@@ -29,7 +29,7 @@ func main() {
 	theProblems := parseProblems(records)
 
 	var right int
-	var answer string
+	// var answer string
 
 	timer_secs, err := strconv.Atoi(*timePtr)
 
@@ -37,53 +37,39 @@ func main() {
 		fmt.Println("Invalid value for the timer")
 	}
 
-	timer := time.NewTimer(time.Duration(timer_secs) * time.Second)
-	chQuestions := make(chan string, len(theProblems))
-
 	i := 0
+
 	func() {
+		timer := time.NewTimer(time.Duration(timer_secs) * time.Second)
+
+		chAnswer := make(chan string, 20)
+
 		for {
+			fmt.Println(theProblems[i].question)
+			fmt.Print("-> ")
+			go func() {
+				var answer string
+				fmt.Scanf("%s\n", &answer)
+				chAnswer <- answer
+			}()
+
 			select {
 			case <-timer.C:
 				fmt.Println("Game over")
-				close(chQuestions)
-				fmt.Println("Total correct", right, "Out of", i)
+				close(chAnswer)
 				return
 
-			case quest := <-chQuestions:
-
-				fmt.Println(quest)
-				fmt.Print("-> ")
-				fmt.Scanln(&answer)
-
+			case answer := <-chAnswer:
 				if theProblems[i].answer == answer {
 					right += 1
 				}
 				i++
-
-				if i >= len(theProblems) {
-					close(chQuestions)
-					return
-				}
-
-			default:
-				chQuestions <- theProblems[i].question
-
 			}
-
 		}
 
 	}()
-	ch := make(chan string)
-	go func(ch <-chan string) {
-		for {
-			select {
-			case <-ch:
-				fmt.Println("ended")
-			default:
-			}
-		}
-	}(ch)
+
+	fmt.Println("Total correct", right, "Out of", i)
 
 }
 
