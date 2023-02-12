@@ -5,17 +5,32 @@ import (
 	"net/http"
 )
 
-// "net/http"
-
 // MapHandler will return an http.HandlerFunc (which also
 // implements http.Handler) that will attempt to map any
 // paths (keys in the map) to their corresponding URL (values
 // that each key in the map points to, in string format).
 // If the path is not provided in the map, then the fallback
 // http.Handler will be called instead.
+
+func printThis(s string) {
+	fmt.Printf("%v", s)
+}
+
 func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
 	//	TODO: Implement this...
-	return nil
+	mux := func(w http.ResponseWriter, r *http.Request) {
+		// http.Redirect(w, r, u, 200)
+		fmt.Fprintf(w, "a field")
+	}
+
+	for p, u := range pathsToUrls {
+
+		http.HandleFunc(p, mux)
+		printThis(u)
+		http.RedirectHandler(u, 302)
+	}
+
+	return mux
 }
 
 // YAMLHandler will parse the provided YAML and then return

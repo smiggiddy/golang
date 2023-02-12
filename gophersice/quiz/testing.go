@@ -24,6 +24,7 @@ func main() {
 			case msg := <-ch:
 				fmt.Println(msg)
 			default:
+
 			}
 		}
 	}()
