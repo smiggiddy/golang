@@ -16,21 +16,58 @@ func printThis(s string) {
 	fmt.Printf("%v", s)
 }
 
+type redirects struct {
+	url       string
+	shortName string
+}
+
+func (re *redirects) redirectMap(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, re.url, http.StatusFound)
+}
+
+func buildMap(fn func(w http.ResponseWriter, r *http.Request), sn string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == sn {
+			fn(w, r)
+		}
+	}
+
+}
+
+func (re redirects) checkPath(r *http.Request, p string) bool {
+	return r.URL.Path == p
+}
+
 func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
 	//	TODO: Implement this...
-	mux := func(w http.ResponseWriter, r *http.Request) {
-		// http.Redirect(w, r, u, 200)
-		fmt.Fprintf(w, "a field")
-	}
+	// mux := func(w http.ResponseWriter, r *http.Request) {
+	// 	// http.Redirect(w, r, u, 200)
+	// 	fmt.Fprintf(w, "a field")
+	// }
 
 	for p, u := range pathsToUrls {
 
-		http.HandleFunc(p, mux)
-		printThis(u)
-		http.RedirectHandler(u, 302)
-	}
+		re := redirects{
+			url:       u,
+			shortName: p,
+		}
 
-	return mux
+		bm := buildMap(re.redirectMap, re.shortName)
+
+		// if err != nil {
+		// 	continue
+		// }
+		return bm
+		// if re.checkPath(r, p) {
+		// 	return buildMap(re.redirectMap, re.shortName)
+		// } else {
+		// 	continue
+		// }
+		// http.HandleFunc(re.shortName, re.buildMap)
+		// return re.buildMap
+		// http.RedirectHandler(u, 302)
+	}
+	return fallback.ServeHTTP
 }
 
 // YAMLHandler will parse the provided YAML and then return
