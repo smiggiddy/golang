@@ -1,6 +1,7 @@
 package urlshortener
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -12,26 +13,44 @@ import (
 // If the path is not provided in the map, then the fallback
 // http.Handler will be called instead.
 
-func printThis(s string) {
-	fmt.Printf("%v", s)
-}
-
 type redirects struct {
 	url       string
 	shortName string
 }
 
-func (re *redirects) redirectMap(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, re.url, http.StatusFound)
+func redirectMap(w http.ResponseWriter, r *http.Request, u string) {
+	http.Redirect(w, r, u, http.StatusFound)
 }
 
-func buildMap(fn func(w http.ResponseWriter, r *http.Request), sn string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == sn {
-			fn(w, r)
-		}
-	}
+func fallBack(w http.ResponseWriter, r *http.Request) {
 
+}
+
+var found = false
+
+func buildMap(fn func(w http.ResponseWriter, r *http.Request, u string), url map[string]string) (http.HandlerFunc, error) {
+
+	re := []redirects{}
+
+	for s, u := range url {
+		re = append(re, redirects{
+			url:       u,
+			shortName: s,
+		})
+	}
+	a := func(w http.ResponseWriter, r *http.Request) {
+		for _, u := range re {
+			if r.URL.Path == u.shortName {
+				fn(w, r, u.url)
+				found = true
+			}
+		}
+
+	}
+	if found == true {
+		return a, nil
+	}
+	return nil, errors.New("go to default")
 }
 
 func (re redirects) checkPath(r *http.Request, p string) bool {
@@ -39,35 +58,17 @@ func (re redirects) checkPath(r *http.Request, p string) bool {
 }
 
 func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
-	//	TODO: Implement this...
-	// mux := func(w http.ResponseWriter, r *http.Request) {
-	// 	// http.Redirect(w, r, u, 200)
-	// 	fmt.Fprintf(w, "a field")
-	// }
 
-	for p, u := range pathsToUrls {
+	var bm http.HandlerFunc
+	var err error
 
-		re := redirects{
-			url:       u,
-			shortName: p,
-		}
-
-		bm := buildMap(re.redirectMap, re.shortName)
-
-		// if err != nil {
-		// 	continue
-		// }
-		return bm
-		// if re.checkPath(r, p) {
-		// 	return buildMap(re.redirectMap, re.shortName)
-		// } else {
-		// 	continue
-		// }
-		// http.HandleFunc(re.shortName, re.buildMap)
-		// return re.buildMap
-		// http.RedirectHandler(u, 302)
+	bm, err = buildMap(redirectMap, pathsToUrls)
+	if err != nil {
+		fmt.Println("This block ran ")
+		return fallBack
 	}
-	return fallback.ServeHTTP
+
+	return bm // fallback.ServeHTTP
 }
 
 // YAMLHandler will parse the provided YAML and then return
