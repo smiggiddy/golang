@@ -12,7 +12,7 @@ func main() {
 
 	// 	// Build the MapHandler using the mux as the fallback
 	pathsToUrls := map[string]string{
-		"/urlshort-godoc": "https://godoc.org/github.com/gophercises/urlshort",
+		"/urlshort-godoc": "https://github.com/gophercises/urlshort",
 		"/yaml-godoc":     "https://godoc.org/gopkg.in/yaml.v2",
 		"/smig":           "https://smig.tech",
 	}
