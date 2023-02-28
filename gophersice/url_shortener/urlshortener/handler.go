@@ -81,19 +81,10 @@ func PrintHello() {
 
 func YamlReader(file string) ([]byte, error) {
 	var y []byte
-	var test yamlURLs
-	yamlFile, err := os.Open(file)
+	y, err := os.ReadFile(file)
 
 	if err != nil {
-		fmt.Println("An error occured with the file ::", err)
+		return nil, errors.New("An error occured with the file ::")
 	}
-
-	reader := yaml.NewDecoder(yamlFile)
-
-	if err := reader.Decode(&test); err != nil {
-		return nil, errors.New("Error with yaml")
-	}
-	fmt.Println("Hello")
-	fmt.Println(test)
 	return y, nil
 }

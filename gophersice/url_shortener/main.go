@@ -31,11 +31,11 @@ func main() {
 
 	if err != nil {
 		y = []byte(yaml)
+		fmt.Println("This ran cause of the nil")
 	}
 
-	if yamlData == nil {
+	if yamlData != nil {
 		y = yamlData
-		fmt.Println("This ran")
 	}
 
 	yamlHandler, err := urlshortener.YAMLHandler(y, mapHandler)
