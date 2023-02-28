@@ -1,8 +1,10 @@
 package urlshortener
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"os"
 
 	"gopkg.in/yaml.v3"
 )
@@ -10,6 +12,11 @@ import (
 type redirects struct {
 	url       string
 	shortName string
+}
+
+type yamlURLs struct {
+	Path string `yaml:"path"`
+	Url  string `yaml:"url"`
 }
 
 func redirector(w http.ResponseWriter, r *http.Request, u string) {
@@ -46,11 +53,6 @@ func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.Handl
 	return bm
 }
 
-type yamlURLs struct {
-	Path string `yaml:"path"`
-	Url  string `yaml:"url"`
-}
-
 func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 	// TODO: Implement this...
 
@@ -75,4 +77,23 @@ func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 
 func PrintHello() {
 	fmt.Println("Testing")
+}
+
+func YamlReader(file string) ([]byte, error) {
+	var y []byte
+	var test yamlURLs
+	yamlFile, err := os.Open(file)
+
+	if err != nil {
+		fmt.Println("An error occured with the file ::", err)
+	}
+
+	reader := yaml.NewDecoder(yamlFile)
+
+	if err := reader.Decode(&test); err != nil {
+		return nil, errors.New("Error with yaml")
+	}
+	fmt.Println("Hello")
+	fmt.Println(test)
+	return y, nil
 }
