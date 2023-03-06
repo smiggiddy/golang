@@ -1,0 +1,39 @@
+{
+    "start": {
+        "title": "CKS/AWS Study Guide",
+        "desc": "exercise to study CKS/AWS, while also utilizing golang",
+        "intro": [
+            "This is a guide to learn more about CKS and also AWS",
+            "Choose which topic you'd like to expoudn on"
+        ],
+        "options": [
+            {
+                "text": "I'd like to learn more about CKS",
+                "sect": "cks"
+            },
+            {
+                "text": "I'd like to learn more about AWS SA",
+                "sect": "aws"
+            }
+        ]
+    },
+    "cks": {
+        "title": "CKS exam tips",
+        "desc": "some pointers for the CKS exam",
+        "tips": [
+            "The CKS is an interactive exam. It's vital to setup a proper vim environment.",
+            "If you already know how to setup vim, please skip to the next tip!"
+            
+        ],
+        "options": [
+            {
+                "text": "Learn more about VIM setup",
+                "sect": "cks-vim"
+            },
+            {
+                "text": "skip vim tip",
+                "sect": "cks-links"
+            }
+        ]
+    }
+}
