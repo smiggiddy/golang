@@ -35,5 +35,44 @@
                 "sect": "cks-links"
             }
         ]
+    },
+    "aws": {
+        "title": "AWS exam tips",
+        "desc": "some pointers for the CKS exam",
+        "tips": [
+            "The AWS is an multi choice exam.",
+            "LinkedIn Learning has great courese to get you started."
+            
+        ],
+        "options": [
+            {
+                "text": "LinkedIn Courses",
+                "sect": "aws-udemy"
+            },
+            {
+                "text": "Udemy Courses",
+                "sect": "aws-udemy"
+            }
+        ]
+    },
+    "cks-vim": {
+        "title": "CKS vim SETUP",
+        "desc": "how to setup vim for CKS exam",
+        "tips": [
+            "set: ts=2 et sts=2",
+            "this allows vim to play nice with yaml"
+        ],
+        "options": [
+            {
+                "text": "Good luck on the exam"
+            }
+        ]
+    },
+    "cks-links": {
+        "title": "CKS Links",
+        "desc": "useful study links",
+        "tips": [
+            "USE the official docs"
+        ]
     }
 }
