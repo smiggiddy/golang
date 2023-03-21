@@ -6,22 +6,21 @@ import (
 	"os"
 )
 
-func Parse() {
+func Parse() studyData {
 	var b []byte
 
-	b, err := os.ReadFile("/Users/smig/repos/github-golang/gophersice/study_adventure/studyguide.json")
+	b, err := os.ReadFile("./studyguide.json")
 	if err != nil {
 		fmt.Println("Something went wrong with that file boss")
 	}
 
 	// var f interface{}
-	var f studyData
-	jsonERR := json.Unmarshal(b, &f)
+	var F studyData
+	jsonERR := json.Unmarshal(b, &F)
 	if jsonERR != nil {
 		fmt.Println("Something went wrong with that file boss")
 	}
-	fmt.Println(f.Intro.Title)
-
+	return F
 }
 
 type studyData struct {
