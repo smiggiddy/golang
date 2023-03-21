@@ -2,7 +2,7 @@
     "start": {
         "title": "CKS/AWS Study Guide",
         "desc": "exercise to study CKS/AWS, while also utilizing golang",
-        "intro": [
+        "tips": [
             "This is a guide to learn more about CKS and also AWS",
             "Choose which topic you'd like to expoudn on"
         ],
@@ -64,7 +64,8 @@
         ],
         "options": [
             {
-                "text": "Good luck on the exam"
+                "text": "Good luck on the exam",
+                "sect": "end"
             }
         ]
     },
@@ -73,6 +74,12 @@
         "desc": "useful study links",
         "tips": [
             "USE the official docs"
+        ], 
+        "options": [
+            {
+                "text": "Good luck!",
+                "sect": "end"
+            }
         ]
     }
 }
