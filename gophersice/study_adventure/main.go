@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -15,8 +14,11 @@ type Page struct {
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	sg := studyguide.Parse()
+	// t, _ := template.ParseFiles("templates/main.html")
+	// t.Execute(w, sg)
 
-	studyguide.RenderTemplate(w, "main", sg)
+	studyguide.RenderTemplate(w, r, "main", sg)
+
 }
 
 // func storyHandler(w http.ResponseWriter, r *http.Request) {
@@ -24,9 +26,9 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 // }
 
 func main() {
-	studyData := studyguide.Parse()
+	// studyData := studyguide.Parse()
 
-	fmt.Println(studyData)
+	// fmt.Println(studyData)
 	http.HandleFunc("/", homeHandler)
 	// http.HandleFunc("/story", storyHandler)
 	log.Fatal(http.ListenAndServe(":5080", nil))

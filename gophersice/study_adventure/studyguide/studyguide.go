@@ -3,9 +3,9 @@ package studyguide
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"os"
+	"text/template"
 )
 
 func Parse() studyData {
@@ -26,7 +26,7 @@ func Parse() studyData {
 }
 
 func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, s studyData) {
-	t, _ := template.ParseFiles("tempaltes/" + tmpl + ".html")
+	t, _ := template.ParseFiles("templates/" + tmpl + ".html")
 	t.Execute(w, s)
 }
 
