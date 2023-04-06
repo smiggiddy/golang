@@ -3,6 +3,8 @@ package studyguide
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
+	"net/http"
 	"os"
 )
 
@@ -21,6 +23,11 @@ func Parse() studyData {
 		fmt.Println("Something went wrong with that file boss")
 	}
 	return F
+}
+
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, s studyData) {
+	t, _ := template.ParseFiles("tempaltes/" + tmpl + ".html")
+	t.Execute(w, s)
 }
 
 type studyData struct {

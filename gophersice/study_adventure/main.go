@@ -10,11 +10,13 @@ import (
 
 type Page struct {
 	Title string
-	Body  []byte
+	Body  struct{}
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hey there!", r.URL.Path)
+	sg := studyguide.Parse()
+
+	studyguide.RenderTemplate(w, "main", sg)
 }
 
 // func storyHandler(w http.ResponseWriter, r *http.Request) {
