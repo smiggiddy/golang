@@ -13,7 +13,7 @@ type Page struct {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	sg := studyguide.Parse()
+	sg := studyguide.Parse("./studyguide.json")
 	// t, _ := template.ParseFiles("templates/main.html")
 	// t.Execute(w, sg)
 
@@ -31,6 +31,6 @@ func main() {
 	// fmt.Println(studyData)
 	http.HandleFunc("/", homeHandler)
 	// http.HandleFunc("/story", storyHandler)
-	log.Fatal(http.ListenAndServe(":5080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }

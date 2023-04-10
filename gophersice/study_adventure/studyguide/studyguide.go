@@ -8,10 +8,10 @@ import (
 	"text/template"
 )
 
-func Parse() studyData {
+func Parse(file string) studyData {
 	var b []byte
 
-	b, err := os.ReadFile("./studyguide.json")
+	b, err := os.ReadFile(file)
 	if err != nil {
 		fmt.Println("Something went wrong with that file boss")
 	}
@@ -28,6 +28,20 @@ func Parse() studyData {
 func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, s studyData) {
 	t, _ := template.ParseFiles("templates/" + tmpl + ".html")
 	t.Execute(w, s)
+}
+
+type Topics map[string]Study
+
+type Study struct {
+	Title   string         `json:"title"`
+	Desc    string         `json:"desc"`
+	Tips    []string       `json:"tips"`
+	Options []StudyOptions `json:"options"`
+}
+
+type StudyOptions struct {
+	Text string `json:"text"`
+	Sect string `json:"sect"`
 }
 
 type studyData struct {
