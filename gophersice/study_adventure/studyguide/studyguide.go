@@ -8,21 +8,32 @@ import (
 	"text/template"
 )
 
-func Parse(file string) studyData {
-	var b []byte
+func Parse(file string) Topics {
+	var Data Topics
 
-	b, err := os.ReadFile(file)
+	// b, err := os.ReadFile(file)
+	// if err != nil {
+	// 	fmt.Println("Something went wrong with that file boss")
+	// }
+
+	// // var f interface{}
+	// var F studyData
+	// jsonERR := json.Unmarshal(b, &F)
+	// if jsonERR != nil {
+	// 	fmt.Println("Something went wrong with that file boss")
+	// }
+	// return F
+
+	f, err := os.Open(file)
 	if err != nil {
-		fmt.Println("Something went wrong with that file boss")
+		fmt.Println("Error opening file")
 	}
+	d := json.NewDecoder(f)
 
-	// var f interface{}
-	var F studyData
-	jsonERR := json.Unmarshal(b, &F)
-	if jsonERR != nil {
-		fmt.Println("Something went wrong with that file boss")
+	if err := d.Decode(&Data); err != nil {
+		fmt.Println(err)
 	}
-	return F
+	return Data
 }
 
 func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, s studyData) {
