@@ -4,20 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Intro.Title}}</title>
+    <title>{{.Title}}</title>
 </head>
 <body>
-
-    Just some random ass text 
+    <h1>
+        {{.Title}}
+    </h1>
     <p>
 
-        {{.Intro.Title}}
+        
         <br>
-        {{.Intro.Desc}}
+        {{.Desc}}
         <br>
-        {{.Intro.About}}
+        <p>
+        {{range .Tips}}
+        {{.}}<br>
+        {{end}}
+        </p>
         <br>
-        {{.Intro.Options}}
+        {{range .Options}}
+        {{ if ne .Sect "end"}}
+        <a href="{{.Sect}}">
+            {{.Text}} 
+        </a> <br>
+        {{ else}}
+        {{.Text}}
+        <br>
+        {{end}}
+        {{end}}
+
     </p>
     
 </body>

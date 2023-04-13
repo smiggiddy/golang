@@ -27,18 +27,18 @@
         ],
         "options": [
             {
-                "text": "Learn more about VIM setup",
+                "text": "vim setup for CKS",
                 "sect": "cks-vim"
             },
             {
-                "text": "skip vim tip",
+                "text": "CKS links",
                 "sect": "cks-links"
             }
         ]
     },
     "aws": {
         "title": "AWS exam tips",
-        "desc": "some pointers for the CKS exam",
+        "desc": "some pointers for the AWS exam",
         "tips": [
             "The AWS is an multi choice exam.",
             "LinkedIn Learning has great courese to get you started."
